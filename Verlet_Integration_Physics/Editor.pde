@@ -4,6 +4,18 @@ public class Editor
   private int prevMouseX = 0;
   private int prevMouseY = 0;
   
+  private boolean isGridBeingSelected = false;
+  
+  public int selectStartCornerX;
+  public int selectStartCornerY;
+  
+  public int pixelsPerDot = 20;
+  
+  public boolean isCreatingGrid()
+  {
+    return isGridBeingSelected;
+  }
+  
   public void updatePrevMouse()
   {
     //If the mouse moved at least 2 pixels, update the old position
@@ -138,6 +150,64 @@ public class Editor
         i++;
       }
     }
+  }
+  
+  public void startGrid()
+  {
+    selectStartCornerX = mouseX;
+    selectStartCornerY = mouseY;
+    
+    isGridBeingSelected = true;
+  }
+  
+  public void endGrid()
+  {    
+    if(!isGridBeingSelected) return;
+    
+    int x1 = editor.selectStartCornerX;
+    int x2 = mouseX;
+    if(mouseX < x1) 
+    {
+      x1 = mouseX;
+      x2 = editor.selectStartCornerX;
+    }
+    
+    int y1 = editor.selectStartCornerY;
+    int y2 = mouseY;
+    if(mouseY < y1) 
+    {
+      y1 = mouseY;
+      y2 = editor.selectStartCornerY;
+    }
+    
+    int originalSize = balls.size();
+    int numX = (x2 + pixelsPerDot / 2 - x1) / pixelsPerDot;
+    
+    for(int by = y1; by <= y2 + pixelsPerDot / 2; by += pixelsPerDot)
+    {
+      for(int bx = x1; bx <= x2 + pixelsPerDot / 2; bx += pixelsPerDot)
+      {
+        balls.add(new Ball(bx, by));
+      }
+    }
+    
+    for(int i = originalSize; i < balls.size() - 1; i++)
+    {
+      //Connect horizontal rows
+      if((i - originalSize + 1) % (numX + 1) != 0) 
+      {
+        sticks.add(new Stick(balls.get(i), balls.get(i+1)));
+      }
+      
+      //Connect vertical columns
+      if(i + numX + 1 < balls.size())
+      {
+        sticks.add(new Stick(balls.get(i), balls.get(i + numX + 1)));
+      }
+
+    }
+    
+    isGridBeingSelected = false;
   }
   
   //Returns true if a ball is constrained by any stick other than the one specified
