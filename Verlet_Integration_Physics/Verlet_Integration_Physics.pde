@@ -64,6 +64,8 @@ void draw()
   //Draw everything to the screen
   renderer.render();
   
+  //if(balls.size() > 0 && ballIndex < balls.size()) println((balls.get(ballIndex).getPos().x - balls.get(ballIndex).getLastPos().x) + ", " + (balls.get(ballIndex).getPos().y - balls.get(ballIndex).getLastPos().y));
+  
   //Updates the previous location of the mouse
   editor.updatePrevMouse();
   
@@ -71,6 +73,7 @@ void draw()
 
 void keyPressed()
 {
+  
   //Toggle if physics are running with space
   if(key == ' ')
   {
@@ -166,5 +169,6 @@ void updatePhysics()
     {
       sticks.get(i).update();
     }
-  }  
+  }
+  
 }

@@ -154,9 +154,11 @@ public class Editor
   
   public void startGrid()
   {
+    //Set the corner that the grid starts from
     selectStartCornerX = mouseX;
     selectStartCornerY = mouseY;
     
+    //Mark that grid is being selected
     isGridBeingSelected = true;
   }
   
@@ -164,6 +166,8 @@ public class Editor
   {    
     if(!isGridBeingSelected) return;
     
+    //Set x1 and y1 to be the top left corner and x2 and y2 to be the bottom right corner
+    //The selection is from the selection start variable to the mouse position
     int x1 = editor.selectStartCornerX;
     int x2 = mouseX;
     if(mouseX < x1) 
@@ -180,31 +184,38 @@ public class Editor
       y2 = editor.selectStartCornerY;
     }
     
+    //Store the number of balls in the scene before the grid is created
     int originalSize = balls.size();
-    int numX = (x2 + pixelsPerDot / 2 - x1) / pixelsPerDot;
     
-    for(int by = y1; by <= y2 + pixelsPerDot / 2; by += pixelsPerDot)
+    int xCount = round(max((x2 - x1) * 1.0 / editor.pixelsPerDot, 0));
+    int yCount = round(max((y2 - y1) * 1.0 / editor.pixelsPerDot, 0));
+    
+    float xWidth = (x2 - x1) * 1.0 / xCount;
+    float yWidth = (y2 - y1) * 1.0 / yCount;
+    
+    //Loop through the count for each dimension and add a ball at the corresponding position
+    for(int yNum = 0; yNum <= yCount; yNum++)
     {
-      for(int bx = x1; bx <= x2 + pixelsPerDot / 2; bx += pixelsPerDot)
+      for(int xNum = 0; xNum <= xCount; xNum++)
       {
-        balls.add(new Ball(bx, by));
+        balls.add(new Ball(x1 + xNum * xWidth, y1 + yNum * yWidth));
       }
     }
     
+    //Loop through all new balls and add sticks between them in a grid
     for(int i = originalSize; i < balls.size() - 1; i++)
     {
       //Connect horizontal rows
-      if((i - originalSize + 1) % (numX + 1) != 0) 
+      if((i - originalSize + 1) % (xCount + 1) != 0) 
       {
         sticks.add(new Stick(balls.get(i), balls.get(i+1)));
       }
       
       //Connect vertical columns
-      if(i + numX + 1 < balls.size())
+      if(i + xCount + 1 < balls.size())
       {
-        sticks.add(new Stick(balls.get(i), balls.get(i + numX + 1)));
+        sticks.add(new Stick(balls.get(i), balls.get(i + xCount + 1)));
       }
-
     }
     
     isGridBeingSelected = false;

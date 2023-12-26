@@ -25,7 +25,9 @@ public class Renderer
     if(!simRunning)
     {
       if(editor.isCreatingGrid())
-      {       
+      {     
+        //Set x1 and y1 to be the top left corner and x2 and y2 to be the bottom right corner
+        //The selection is from the selection start variable to the mouse position
         int x1 = editor.selectStartCornerX;
         int x2 = mouseX;
         if(mouseX < x1) 
@@ -44,11 +46,18 @@ public class Renderer
         
         fill(255);
         
-        for(int by = y1; by <= y2 + editor.pixelsPerDot / 2; by += editor.pixelsPerDot)
+        int xCount = round(max((x2 - x1) * 1.0 / editor.pixelsPerDot, 0));
+        int yCount = round(max((y2 - y1) * 1.0 / editor.pixelsPerDot, 0));
+        
+        float xWidth = (x2 - x1) * 1.0 / xCount;
+        float yWidth = (y2 - y1) * 1.0 / yCount;
+        
+        //Loop through the count for each dimension and draw a fake ball at the corresponding position
+        for(int yNum = 0; yNum <= yCount; yNum++)
         {
-          for(int bx = x1; bx <= x2 + editor.pixelsPerDot / 2; bx += editor.pixelsPerDot)
+          for(int xNum = 0; xNum <= xCount; xNum++)
           {
-            ellipse(bx, by, 10, 10);
+            ellipse(x1 + xNum * xWidth, y1 + yNum * yWidth, 10, 10);
           }
         }
         

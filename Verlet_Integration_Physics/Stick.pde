@@ -40,8 +40,8 @@ public class Stick
     }
     else
     {
-      xOffset *= 2;
-      yOffset *= 2;
+      //xOffset *= 2;
+      //yOffset *= 2;
     }
 
     //If the ball isn't pinned, move it by the offsets
