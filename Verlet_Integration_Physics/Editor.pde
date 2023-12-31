@@ -6,10 +6,10 @@ public class Editor
   
   private boolean isGridBeingSelected = false;
   
-  public int selectStartCornerX;
-  public int selectStartCornerY;
+  private int selectStartCornerX;
+  private int selectStartCornerY;
   
-  public int pixelsPerDot = 20;
+  private int pixelsPerDot = 40;
   
   public boolean isCreatingGrid()
   {
@@ -80,23 +80,41 @@ public class Editor
       }
       else //If there was a previously clicked ball
       {
-        //Find the ball that was clicked on
-        int index = clickedBallIndex();
-        
-        //If there is a ball that was clicked and it's not the same ball as the previously clicked one, add a stick between it and reset the previously clicked ball to null
-        if(index != -1 && balls.get(index) != prevStickClick)
-        {
-          sticks.add(new Stick(prevStickClick, balls.get(index)));
-          prevStickClick = null;
-        }
-        else //If you don't click a ball or click the same ball again, unselect it
-        {
-          prevStickClick = null;
-        }
-        
+        editSticksEndPoint();
       }
     }
     
+  }
+  
+  public void editSticksEndPoint()
+  {
+    if(prevStickClick == null) return;
+    
+    //Find the ball that was clicked on
+    int index = clickedBallIndex();
+    
+    //If there is a ball that was clicked and it's not the same ball as the previously clicked one and there is not a stick connecting them already, 
+    //add a stick between it and reset the previously clicked ball to null
+    if(index != -1 && balls.get(index) != prevStickClick && isUniqueConnection(prevStickClick, balls.get(index)))
+    {
+      sticks.add(new Stick(prevStickClick, balls.get(index)));
+      prevStickClick = null;
+    }
+    else if(index == -1 || !isUniqueConnection(prevStickClick, balls.get(index))) //If you don't click a ball or select a ball that already has an identical connection, unselect it
+    {
+      prevStickClick = null;
+    }
+  }
+  
+  //Returns true if and only if no existing stick connects b1 to b2
+  private boolean isUniqueConnection(Ball b1, Ball b2)
+  {
+    for(Stick s : sticks)
+    {
+      if(s.getBall1() == b1 && s.getBall2() == b2) return false;
+      if(s.getBall1() == b2 && s.getBall2() == b1) return false;
+    }
+    return true;
   }
   
   public void removeClickedStick()
@@ -242,7 +260,7 @@ public class Editor
     
     for(int i = 0; i < balls.size(); i++)
     {
-      if(balls.get(i).getPos().distance(p) < balls.get(i).ballSize) //Check double the size to make clicking easier
+      if(balls.get(i).getPos().distance(p) < balls.get(i).getBallSize()) //Check double the size to make clicking easier
       {
         return i;
       }

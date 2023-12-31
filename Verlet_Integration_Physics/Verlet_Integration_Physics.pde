@@ -9,7 +9,7 @@ Editor editor = new Editor();
 
 //Physics
 boolean simRunning = false;
-int constraintIterations = 5;
+int constraintIterations = 10;
 
 //Edit mode
 enum EditState {BALLS, STICKS, PINS, GRID}
@@ -68,7 +68,7 @@ void draw()
   
   //Updates the previous location of the mouse
   editor.updatePrevMouse();
-  
+
 }
 
 void keyPressed()
@@ -140,7 +140,11 @@ void mousePressed()
 
 void mouseReleased()
 {
-  if(editState == EditState.GRID)
+  if(editState == EditState.STICKS && mouseButton == LEFT)
+  {
+    editor.editSticksEndPoint();
+  }
+  else if(editState == EditState.GRID)
   {
     editor.endGrid();
   }

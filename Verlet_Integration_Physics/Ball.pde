@@ -1,7 +1,7 @@
 public class Ball
 {
   //Rendering
-  public float ballSize = 10;
+  private float ballSize = 10;
   
   private Point lastPos;
   private Point pos;
@@ -9,7 +9,7 @@ public class Ball
   //Physics parameters
   private float gravity = 0.1;
   private float bounceDampening = 0.9;
-  public float ballRadius = 5;
+  private float ballRadius = 5;
   
   private boolean isPinned = false;
   
@@ -35,6 +35,11 @@ public class Ball
   {
     pos = new Point(x, y);
     lastPos = new Point(pos.x + dx, pos.y + dy);
+  }
+  
+  public float getBallSize()
+  {
+    return ballSize;
   }
   
   public void update()
@@ -105,6 +110,7 @@ public class Ball
     }
     
     ellipse(pos.x, pos.y, ballSize, ballSize);
+    
   }
   
   public Point getPos()
