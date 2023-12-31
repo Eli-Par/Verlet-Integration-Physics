@@ -80,13 +80,13 @@ public class Editor
       }
       else //If there was a previously clicked ball
       {
-        editSticksEndPoint();
+        editSticksEndPoint(true);
       }
     }
     
   }
   
-  public void editSticksEndPoint()
+  public void editSticksEndPoint(boolean calledFromClick)
   {
     if(prevStickClick == null) return;
     
@@ -100,7 +100,7 @@ public class Editor
       sticks.add(new Stick(prevStickClick, balls.get(index)));
       prevStickClick = null;
     }
-    else if(index == -1 || !isUniqueConnection(prevStickClick, balls.get(index))) //If you don't click a ball or select a ball that already has an identical connection, unselect it
+    else if(index == -1 || !isUniqueConnection(prevStickClick, balls.get(index)) || calledFromClick) //If you don't click a ball or select a ball that already has an identical connection or click the same ball twice (called from a click, not a release), unselect it
     {
       prevStickClick = null;
     }

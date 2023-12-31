@@ -142,7 +142,7 @@ void mouseReleased()
 {
   if(editState == EditState.STICKS && mouseButton == LEFT)
   {
-    editor.editSticksEndPoint();
+    editor.editSticksEndPoint(false);
   }
   else if(editState == EditState.GRID)
   {
