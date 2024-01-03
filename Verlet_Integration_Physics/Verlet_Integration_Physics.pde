@@ -9,10 +9,10 @@ Editor editor = new Editor();
 
 //Physics
 boolean simRunning = false;
-int constraintIterations = 5;
+int constraintIterations = 10;
 
 //Edit mode
-enum EditState {BALLS, STICKS, PINS}
+enum EditState {BALLS, STICKS, PINS, GRID}
 
 EditState editState = EditState.BALLS; 
 
@@ -33,6 +33,11 @@ void draw()
   if(editState != EditState.STICKS || simRunning)
   {
     prevStickClick = null;
+  }
+  
+  if(editState != EditState.GRID || simRunning)
+  {
+    editor.isGridBeingSelected = false;
   }
   
   if(simRunning)
@@ -59,13 +64,16 @@ void draw()
   //Draw everything to the screen
   renderer.render();
   
+  //if(balls.size() > 0 && ballIndex < balls.size()) println((balls.get(ballIndex).getPos().x - balls.get(ballIndex).getLastPos().x) + ", " + (balls.get(ballIndex).getPos().y - balls.get(ballIndex).getLastPos().y));
+  
   //Updates the previous location of the mouse
   editor.updatePrevMouse();
-  
+
 }
 
 void keyPressed()
 {
+  
   //Toggle if physics are running with space
   if(key == ' ')
   {
@@ -84,6 +92,10 @@ void keyPressed()
   else if(key == 's' && !simRunning)
   {
     editState = EditState.STICKS;
+  }
+  else if(key == 'g' && !simRunning)
+  {
+    editState = EditState.GRID;
   }
   else if(key == 'c' && !simRunning)
   {
@@ -118,7 +130,31 @@ void mousePressed()
     {
       editor.editSticks();
     }
+    else if(editState == EditState.GRID)
+    {
+      editor.startGrid();
+    }
   }
+  
+}
+
+void mouseReleased()
+{
+  if(editState == EditState.STICKS && mouseButton == LEFT)
+  {
+    editor.editSticksEndPoint(false);
+  }
+  else if(editState == EditState.GRID)
+  {
+    editor.endGrid();
+  }
+}
+
+void mouseWheel(MouseEvent event) {
+  float e = event.getCount();
+  editor.pixelsPerDot += (int) e * -5;
+  if(editor.pixelsPerDot < 20) editor.pixelsPerDot = 20;
+  if(editor.pixelsPerDot > 100) editor.pixelsPerDot = 100;
   
 }
 
@@ -137,5 +173,6 @@ void updatePhysics()
     {
       sticks.get(i).update();
     }
-  }  
+  }
+  
 }
