@@ -150,12 +150,16 @@ void mouseReleased()
   }
 }
 
-void mouseWheel(MouseEvent event) {
-  float e = event.getCount();
-  editor.pixelsPerDot += (int) e * -5;
-  if(editor.pixelsPerDot < 20) editor.pixelsPerDot = 20;
-  if(editor.pixelsPerDot > 100) editor.pixelsPerDot = 100;
-  
+void mouseWheel(MouseEvent event) 
+{
+  //If in grid edit mode, change the spacing between balls using based on the scroll wheel
+  if(editState == EditState.GRID)
+  {
+    float e = event.getCount();
+    editor.pixelsPerDot += (int) e * -5;
+    if(editor.pixelsPerDot < 20) editor.pixelsPerDot = 20;
+    if(editor.pixelsPerDot > 100) editor.pixelsPerDot = 100;
+  }
 }
 
 void updatePhysics()
