@@ -40,15 +40,21 @@ public class Stick
     }
     else
     {
-      //xOffset *= 2;
-      //yOffset *= 2;
+      xOffset *= 2;
+      yOffset *= 2;
     }
 
     //If the ball isn't pinned, move it by the offsets
+    //Otherwise if the other ball isn't pin, move it again to make up the lost distance
     if(!b2.isPinned())
     {
       p2.x += xOffset;
       p2.y += yOffset;
+    }
+    else if(!b1.isPinned())
+    {
+      p1.x -= xOffset;
+      p1.y -= yOffset;      
     }
     
   }
